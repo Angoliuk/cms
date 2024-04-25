@@ -9,10 +9,67 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum NEWS_STATUS {
+  HIDDEN
+  VISIBLE
+}
+
+enum SOURCE_PERIOD {
+  DAILY
+  HOURLY
+}
+
 model User {
-  id       String @id @default(uuid())
+  id String @id @default(uuid())
+
   email    String @unique
   password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+  tags        TagsOnNews[]
+  status      NEWS_STATUS  @default(VISIBLE)
+  isDraft     Boolean      @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Tag {
+  id String @id @default(uuid())
+
+  news TagsOnNews[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TagsOnNews {
+  news   News   @relation(fields: [newsId], references: [id])
+  newsId String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  tagId  String
+
+  assignedAt DateTime @default(now())
+
+  @@id([newsId, tagId])
+  @@index([tagId])
+}
+
+model Source {
+  id String @id @default(uuid())
+
+  url         String
+  periodicity SOURCE_PERIOD
+  isActive    Boolean       @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
