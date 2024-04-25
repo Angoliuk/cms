@@ -7,6 +7,7 @@ import { TokenUser } from "../validation";
 export const GetUser = createParamDecorator((_, context: ExecutionContext): TokenUser => {
   const request = context.switchToHttp().getRequest<Request>();
 
+  // TODO: validate with zod
   if (!request?.user?.email || !request?.user?.userId) throw new ForbiddenError();
 
   return {
