@@ -24,6 +24,17 @@ services:
         limits:
           cpus: "1"
           memory: 4G
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: admin
+    volumes:
+      - /Users/stasangoliuk/Desktop/cms/minio-tmp:/data
+    command: server /data --console-address ":9001"
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
