@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { LoggerMiddleware } from "../middlewares";
 import { AuthModule } from "./auth";
+import { BullMQConfig } from "./bullmq";
 import { EnvModule } from "./env";
 import { MinioModule } from "./minio";
 import { NewsModule } from "./news";
@@ -21,6 +22,7 @@ import { UsersModule } from "./users";
     SourcesModule,
     NewsModule,
     MinioModule,
+    BullMQConfig,
   ],
 })
 export class AppModule implements NestModule {
