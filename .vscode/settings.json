@@ -7,5 +7,5 @@
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
-  "cSpell.words": ["Minio"]
+  "cSpell.words": ["bullmq", "Minio"]
 }
