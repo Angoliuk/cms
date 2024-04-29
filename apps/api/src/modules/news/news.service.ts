@@ -17,12 +17,12 @@ export class NewsService {
     return await this.prisma.news.delete(deleteData);
   }
 
-  async find(findData: Prisma.NewsFindManyArgs<DefaultArgs>) {
-    return await this.prisma.news.findMany(findData);
+  async get(getData: Prisma.NewsFindManyArgs<DefaultArgs>) {
+    return await this.prisma.news.findMany(getData);
   }
 
-  async findOne(findData: Prisma.NewsFindUniqueArgs<DefaultArgs>) {
-    return await this.prisma.news.findUnique(findData);
+  async getOne(getData: Prisma.NewsFindUniqueArgs<DefaultArgs>) {
+    return await this.prisma.news.findUnique(getData);
   }
 
   async update(updateData: Prisma.NewsUpdateArgs<DefaultArgs>) {
