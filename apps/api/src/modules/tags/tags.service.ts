@@ -17,12 +17,12 @@ export class TagsService {
     return await this.prisma.tag.delete(deleteData);
   }
 
-  async find(findData: Prisma.TagFindManyArgs<DefaultArgs>) {
-    return await this.prisma.tag.findMany(findData);
+  async get(getData: Prisma.TagFindManyArgs<DefaultArgs>) {
+    return await this.prisma.tag.findMany(getData);
   }
 
-  async findOne(findData: Prisma.TagFindUniqueArgs<DefaultArgs>) {
-    return await this.prisma.tag.findUnique(findData);
+  async getOne(getData: Prisma.TagFindUniqueArgs<DefaultArgs>) {
+    return await this.prisma.tag.findUnique(getData);
   }
 
   async update(updateData: Prisma.TagUpdateArgs<DefaultArgs>) {
