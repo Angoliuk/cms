@@ -1,5 +1,5 @@
 import { contract } from "@/shared/api";
-import { NotFoundError, formatResponse } from "@/shared/utils";
+import { NotFoundError, formatResponse, getPaginatedResponse } from "@/shared/utils";
 import { Controller } from "@nestjs/common";
 import { TsRest, TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 
@@ -29,8 +29,14 @@ export class SourcesController {
   @TsRestHandler(contract.sources.get)
   async get() {
     return tsRestHandler(contract.sources.get, async ({ query }) => {
-      const sources = await this.sourcesService.get(query);
-      return formatResponse(sources);
+      const { limit, orderBy, page } = query;
+      const sources = await this.sourcesService.get({ orderBy, skip: page, take: limit });
+
+      const response = getPaginatedResponse(sources, {
+        limit,
+        page,
+      });
+      return formatResponse(response);
     });
   }
 

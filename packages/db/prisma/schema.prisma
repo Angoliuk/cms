@@ -46,6 +46,7 @@ model News {
 model Tag {
   id String @id @default(uuid())
 
+  name String
   news TagsOnNews[]
 
   createdAt DateTime @default(now())
@@ -68,6 +69,7 @@ model Source {
   id String @id @default(uuid())
 
   url         String
+  name        String
   periodicity SOURCE_PERIOD
   isActive    Boolean       @default(true)
 
