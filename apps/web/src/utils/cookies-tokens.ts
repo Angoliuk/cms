@@ -1,5 +1,5 @@
 "use server";
-import { cookiesUtil } from "@/web-shared/utils";
+import { cookiesUtil } from "@/ui-shared/utils";
 
 export const cookiesTokens = async () => ({
   accessToken: cookiesUtil<string>("accessToken"),
