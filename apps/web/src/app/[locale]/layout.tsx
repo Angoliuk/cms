@@ -1,3 +1,4 @@
+import { Toaster } from "@/ui-shared/components/toaster";
 import { ReactNode } from "react";
 
 import { locales } from "../../utils/i18n/i18n";
@@ -17,7 +18,12 @@ export default function LocaleLayout({
 }) {
   return (
     <html lang={locale}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <div className="absolute bottom-10 right-10">
+          <Toaster />
+        </div>
+      </body>
     </html>
   );
 }

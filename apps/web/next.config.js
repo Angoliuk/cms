@@ -8,6 +8,17 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  images: {
+    remotePatterns: [
+      // TODO: remove after tests
+      {
+        hostname: "**",
+        pathname: "**",
+        port: "",
+        protocol: "https",
+      },
+    ],
+  },
   nx: {
     svgr: false,
   },
