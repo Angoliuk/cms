@@ -1,4 +1,14 @@
-import { ForbiddenError, NotFoundError, ServerError } from "../../utils/errors";
+import { STATUS_CODES } from "@/shared/constants";
+import { ContractInstance } from "@/shared/types";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  RequestValidationError,
+  ResponseValidationError,
+  ServerError,
+} from "@/shared/utils";
+
 import {
   createUserBodySchema,
   createUserResponseSchema,
@@ -11,9 +21,7 @@ import {
   updateUserBodySchema,
   updateUserPathParamsSchema,
   updateUserResponseSchema,
-} from "../../validation/users/index";
-import { STATUS_CODES } from "../constants";
-import { ContractInstance } from "./types";
+} from "../validation";
 
 export const usersContract = (c: ContractInstance) =>
   c.router(
@@ -21,8 +29,11 @@ export const usersContract = (c: ContractInstance) =>
       create: {
         body: createUserBodySchema,
         method: "POST",
-        path: "/",
+        path: "/create",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -32,9 +43,12 @@ export const usersContract = (c: ContractInstance) =>
       delete: {
         body: null,
         method: "DELETE",
-        path: "/:userId",
+        path: "/delete/:userId",
         pathParams: deleteUserPathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -43,9 +57,12 @@ export const usersContract = (c: ContractInstance) =>
       },
       get: {
         method: "GET",
-        path: "/",
+        path: "/get",
         query: getUsersQuerySchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -54,9 +71,12 @@ export const usersContract = (c: ContractInstance) =>
       },
       getById: {
         method: "GET",
-        path: "/:userId",
+        path: "/get-by-id/:userId",
         pathParams: getByIdUserPathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -66,9 +86,12 @@ export const usersContract = (c: ContractInstance) =>
       update: {
         body: updateUserBodySchema,
         method: "PUT",
-        path: "/:userId",
+        path: "/update/:userId",
         pathParams: updateUserPathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,

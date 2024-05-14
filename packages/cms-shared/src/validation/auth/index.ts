@@ -1,6 +1,5 @@
+import { tokensSchema, userIdSchema, userSchema } from "@/shared/types";
 import { z } from "zod";
-
-import { tokensSchema, userIdSchema } from "../general";
 
 export type SignInBodySchema = z.infer<typeof signInBodySchema>;
 export const signInBodySchema = z.object({ email: z.string().min(1), password: z.string().min(1) });
@@ -13,3 +12,6 @@ export const signUpBodySchema = z.object({ email: z.string().min(1), password: z
 
 export type SignUpResponseSchema = z.infer<typeof signUpResponseSchema>;
 export const signUpResponseSchema = z.object({ email: z.string().min(1), id: userIdSchema }).and(tokensSchema);
+
+export type MeResponseSchema = z.infer<typeof meResponseSchema>;
+export const meResponseSchema = userSchema;

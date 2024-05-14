@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { STATUS_CODES, StatusCodes } from "../api/constants";
+import { STATUS_CODES, StatusCodes } from "../constants";
 
 export abstract class BaseError extends Error {
   static statusCode: StatusCodes;
@@ -55,6 +55,12 @@ type BaseErrorType<TName extends string, TStatus extends StatusCodes> = Merge<
 export class ForbiddenError extends BaseError.extend("ForbiddenError", STATUS_CODES.FORBIDDEN) {}
 
 export class NotFoundError extends BaseError.extend("NotFoundError", STATUS_CODES.NOT_FOUND) {}
+
+export class BadRequestError extends BaseError.extend("BadRequestError", STATUS_CODES.BAD_REQUEST) {}
+
+export class RequestValidationError extends BaseError.extend("RequestValidationError", STATUS_CODES.BAD_REQUEST) {}
+
+export class ResponseValidationError extends BaseError.extend("ResponseValidationError", STATUS_CODES.BAD_REQUEST) {}
 
 export class ServerError extends BaseError.extend("InternalServerError", STATUS_CODES.SERVER_ERROR) {}
 

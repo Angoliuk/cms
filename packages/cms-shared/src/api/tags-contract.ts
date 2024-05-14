@@ -1,4 +1,14 @@
-import { ForbiddenError, NotFoundError, ServerError } from "../../utils/errors";
+import { STATUS_CODES } from "@/shared/constants";
+import { ContractInstance } from "@/shared/types";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  RequestValidationError,
+  ResponseValidationError,
+  ServerError,
+} from "@/shared/utils";
+
 import {
   createTagBodySchema,
   createTagResponseSchema,
@@ -11,9 +21,7 @@ import {
   updateTagBodySchema,
   updateTagPathParamsSchema,
   updateTagResponseSchema,
-} from "../../validation/tags/index";
-import { STATUS_CODES } from "../constants";
-import { ContractInstance } from "./types";
+} from "../validation";
 
 export const tagsContract = (c: ContractInstance) =>
   c.router(
@@ -21,8 +29,11 @@ export const tagsContract = (c: ContractInstance) =>
       create: {
         body: createTagBodySchema,
         method: "POST",
-        path: "/",
+        path: "/create",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -32,9 +43,12 @@ export const tagsContract = (c: ContractInstance) =>
       delete: {
         body: null,
         method: "DELETE",
-        path: "/:tagId",
+        path: "/delete/:tagId",
         pathParams: deleteTagPathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -43,9 +57,12 @@ export const tagsContract = (c: ContractInstance) =>
       },
       get: {
         method: "GET",
-        path: "/",
+        path: "/get",
         query: getTagsQuerySchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -54,9 +71,12 @@ export const tagsContract = (c: ContractInstance) =>
       },
       getById: {
         method: "GET",
-        path: "/:tagId",
+        path: "/get-by-id/:tagId",
         pathParams: getByIdTagPathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -66,9 +86,12 @@ export const tagsContract = (c: ContractInstance) =>
       update: {
         body: updateTagBodySchema,
         method: "PUT",
-        path: "/:tagId",
+        path: "/update/:tagId",
         pathParams: updateTagPathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,

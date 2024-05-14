@@ -1,13 +1,21 @@
-import { ForbiddenError, NotFoundError, ServerError } from "../../utils/errors";
+import { STATUS_CODES } from "@/shared/constants";
+import { ContractInstance, tokensSchema } from "@/shared/types";
 import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  RequestValidationError,
+  ResponseValidationError,
+  ServerError,
+} from "@/shared/utils";
+
+import {
+  meResponseSchema,
   signInBodySchema,
   signInResponseSchema,
   signUpBodySchema,
   signUpResponseSchema,
-  tokensSchema,
-} from "../../validation";
-import { STATUS_CODES } from "../constants";
-import { ContractInstance } from "./types";
+} from "../validation";
 
 export const authContract = (c: ContractInstance) =>
   c.router(
@@ -17,9 +25,25 @@ export const authContract = (c: ContractInstance) =>
         method: "POST",
         path: "/logout",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: null,
+        },
+      },
+      me: {
+        method: "GET",
+        path: "/me",
+        responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
+          [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
+          [STATUS_CODES.SUCCESS]: meResponseSchema,
         },
       },
       refreshTokens: {
@@ -27,6 +51,9 @@ export const authContract = (c: ContractInstance) =>
         method: "POST",
         path: "/refresh",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -38,6 +65,9 @@ export const authContract = (c: ContractInstance) =>
         method: "POST",
         path: "/sign-in",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -49,6 +79,9 @@ export const authContract = (c: ContractInstance) =>
         method: "POST",
         path: "/sign-up",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,

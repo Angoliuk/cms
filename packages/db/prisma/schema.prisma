@@ -9,16 +9,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum NEWS_STATUS {
-  HIDDEN
-  VISIBLE
-}
-
-enum SOURCE_PERIOD {
-  DAILY
-  HOURLY
-}
-
 model User {
   id String @id @default(uuid())
 
@@ -29,14 +19,23 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+enum NEWS_VISIBILITY {
+  HIDDEN
+  VISIBLE
+}
+
 model News {
   id String @id @default(uuid())
 
-  title       String
-  description String
-  tags        TagsOnNews[]
-  status      NEWS_STATUS  @default(VISIBLE)
-  isDraft     Boolean      @default(false)
+  title                   String
+  description             String?
+  imageLink               String?
+  originalPublicationDate DateTime
+  originalLink            String
+  visibility              NEWS_VISIBILITY @default(VISIBLE)
+  isDraft                 Boolean         @default(false)
+  tags                    TagsOnNews[]
+  promotions              Promotion[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -65,6 +64,11 @@ model TagsOnNews {
   @@index([tagId])
 }
 
+enum SOURCE_PERIOD {
+  DAILY
+  HOURLY
+}
+
 model Source {
   id String @id @default(uuid())
 
@@ -75,4 +79,71 @@ model Source {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum PROMOTION_LOCATION {
+  LIST
+  SEARCH
+}
+
+enum PROMOTION_LOCATION_LIST_TYPE {
+  MAIN
+  TAG_FILTER
+}
+
+model PromotionConfig {
+  id String @id @default(uuid())
+
+  location          PROMOTION_LOCATION @unique
+  promotionsPerPage Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// I do not like Promotions table,
+// because for different promotion type we will have different fields, but table do not represents it
+// (as an example we need to have "search" only when we have such location)
+//
+// Options to fix
+// 1:
+// In general, it will be better to use sql CHECK to make sure that
+// we will have only needed fields
+// but prisma do not has CHECK functionality
+//
+// 2:
+// I think the best option is to divide it for different tables
+// Like Search promotions and List promotions
+// How to make different types of content in this approach? I do not know :<
+model Promotion {
+  id String @id @default(uuid())
+
+  locations PROMOTION_LOCATION[]
+
+  // for list location
+  listType PROMOTION_LOCATION_LIST_TYPE?
+  priority Int?
+
+  // for search location
+  search String?
+
+  // for text content
+  text String?
+
+  // for image content
+  url String?
+
+  // for image and text content
+  link String?
+
+  // for news content
+  news   News?   @relation(fields: [newsId], references: [id])
+  newsId String?
+
+  isDraft Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([newsId])
 }

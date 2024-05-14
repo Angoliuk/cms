@@ -1,4 +1,4 @@
-import { STATUS_CODES } from "../api";
+import { STATUS_CODES } from "../constants";
 import { BaseError } from "./errors";
 
 export type FormatSuccessResponse<T> = { body: T; status: typeof STATUS_CODES.SUCCESS };

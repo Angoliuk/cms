@@ -1,25 +1,15 @@
 // TODO: investigate @nx/enforce-module-boundaries error for prisma import
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SOURCE_PERIOD } from "@/db";
+import { sourceIdSchema, sourceSchema } from "@/shared/types";
+import { getBaseQuerySchema, getPaginatedResponseValidation } from "@/shared/utils/validation";
 import { z } from "zod";
-
-import { getBaseQueryValidation, getPaginatedResponseValidation, sourceIdSchema } from "../general";
-
-export type SourceSchema = z.infer<typeof sourceSchema>;
-export const sourceSchema = z.object({
-  createdAt: z.coerce.date(),
-  id: z.string().min(1),
-  isActive: z.boolean(),
-  name: z.string().min(1),
-  periodicity: z.enum([SOURCE_PERIOD.DAILY, SOURCE_PERIOD.HOURLY]),
-  updatedAt: z.coerce.date(),
-  url: z.string().min(1),
-});
 
 export type CreateSourceBodySchema = z.infer<typeof createSourceBodySchema>;
 export const createSourceBodySchema = z.object({
+  isActive: z.boolean(),
   name: z.string().min(1),
-  periodicity: z.enum([SOURCE_PERIOD.DAILY, SOURCE_PERIOD.HOURLY]),
+  periodicity: z.nativeEnum(SOURCE_PERIOD),
   url: z.string().min(1),
 });
 
@@ -33,7 +23,7 @@ export type DeleteSourceResponseSchema = z.infer<typeof deleteSourceResponseSche
 export const deleteSourceResponseSchema = sourceSchema;
 
 export type GetSourcesQuerySchema = z.infer<typeof getSourcesQuerySchema>;
-export const getSourcesQuerySchema = getBaseQueryValidation(z.object({}));
+export const getSourcesQuerySchema = getBaseQuerySchema(sourceSchema);
 
 export type GetSourcesResponseSchema = z.infer<typeof getSourcesResponseSchema>;
 export const getSourcesResponseSchema = getPaginatedResponseValidation(sourceSchema);
@@ -48,14 +38,12 @@ export type UpdateSourcePathParamsSchema = z.infer<typeof updateSourcePathParams
 export const updateSourcePathParamsSchema = z.object({ sourceId: sourceIdSchema });
 
 export type UpdateSourceBodySchema = z.infer<typeof updateSourceBodySchema>;
-export const updateSourceBodySchema = z
-  .object({
-    isActive: z.boolean(),
-    name: z.string().min(1),
-    periodicity: z.enum([SOURCE_PERIOD.DAILY, SOURCE_PERIOD.HOURLY]),
-    url: z.string().min(1),
-  })
-  .partial();
+export const updateSourceBodySchema = z.object({
+  isActive: z.boolean(),
+  name: z.string().min(1),
+  periodicity: z.nativeEnum(SOURCE_PERIOD),
+  url: z.string().min(1),
+});
 
 export type UpdateSourceResponseSchema = z.infer<typeof updateSourceResponseSchema>;
 export const updateSourceResponseSchema = sourceSchema;

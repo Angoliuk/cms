@@ -1,4 +1,4 @@
-import { STATUS_CODES } from "../api";
+import { STATUS_CODES } from "../constants";
 
 const getErrorStatusCode = (error: object, defaultErrorCode: number) => {
   if ("getStatus" in error && error.getStatus instanceof Function) {

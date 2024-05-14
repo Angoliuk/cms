@@ -1,4 +1,14 @@
-import { ForbiddenError, NotFoundError, ServerError } from "../../utils/errors";
+import { STATUS_CODES } from "@/shared/constants";
+import { ContractInstance } from "@/shared/types";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  RequestValidationError,
+  ResponseValidationError,
+  ServerError,
+} from "@/shared/utils";
+
 import {
   createSourceBodySchema,
   createSourceResponseSchema,
@@ -11,9 +21,7 @@ import {
   updateSourceBodySchema,
   updateSourcePathParamsSchema,
   updateSourceResponseSchema,
-} from "../../validation/sources/index";
-import { STATUS_CODES } from "../constants";
-import { ContractInstance } from "./types";
+} from "../validation";
 
 export const sourcesContract = (c: ContractInstance) =>
   c.router(
@@ -21,8 +29,11 @@ export const sourcesContract = (c: ContractInstance) =>
       create: {
         body: createSourceBodySchema,
         method: "POST",
-        path: "/",
+        path: "/create",
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -32,9 +43,12 @@ export const sourcesContract = (c: ContractInstance) =>
       delete: {
         body: null,
         method: "DELETE",
-        path: "/:sourceId",
+        path: "/delete/:sourceId",
         pathParams: deleteSourcePathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -43,9 +57,12 @@ export const sourcesContract = (c: ContractInstance) =>
       },
       get: {
         method: "GET",
-        path: "/",
+        path: "/get",
         query: getSourcesQuerySchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -54,9 +71,12 @@ export const sourcesContract = (c: ContractInstance) =>
       },
       getById: {
         method: "GET",
-        path: "/:sourceId",
+        path: "/get-by-id/:sourceId",
         pathParams: getByIdSourcePathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
@@ -66,9 +86,12 @@ export const sourcesContract = (c: ContractInstance) =>
       update: {
         body: updateSourceBodySchema,
         method: "PUT",
-        path: "/:sourceId",
+        path: "/update/:sourceId",
         pathParams: updateSourcePathParamsSchema,
         responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,

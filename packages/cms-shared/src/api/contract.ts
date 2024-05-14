@@ -1,21 +1,25 @@
 import { initContract } from "@ts-rest/core";
 
 import { authContract } from "./auth-contract";
+import { newsContract } from "./news-contract";
+import { promotionsContract } from "./promotions-contract";
 import { sourcesContract } from "./sources-contract";
 import { tagsContract } from "./tags-contract";
 import { usersContract } from "./users-contract";
 
 const c = initContract();
 
-export const contract = c.router(
+export const cmsContract = c.router(
   {
     auth: authContract(c),
+    news: newsContract(c),
+    promotions: promotionsContract(c),
     sources: sourcesContract(c),
     tags: tagsContract(c),
     users: usersContract(c),
   },
   {
-    pathPrefix: "/api",
+    pathPrefix: "/api/cms",
     strictStatusCodes: true,
   },
 );
