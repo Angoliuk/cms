@@ -1,28 +1,27 @@
 import { ReactElement } from "react";
 
 import { Control, FieldPathByValue, FieldValues, PathValue, useController } from "../form";
-import { Select, SelectProps } from "./select";
+import { Switch, SwitchProps } from "./switch";
 
-export type FormSelectProps<
+export type FormSwitchProps<
   TFieldValues extends FieldValues,
-  TPath extends FieldPathByValue<TFieldValues, boolean | number | string>,
-> = Omit<SelectProps, "defaultValue" | "onBlur" | "onChange" | "value"> & {
+  TPath extends FieldPathByValue<TFieldValues, boolean | null | number | string | undefined>,
+> = Omit<SwitchProps, "defaultValue" | "onBlur" | "onChange" | "value"> & {
   control: Control<TFieldValues>;
   defaultValue?: PathValue<TFieldValues, TPath>;
   name: TPath;
 } & { containerClassName?: string };
 
-export const FormSelect = <
+export const FormSwitch = <
   TFieldValues extends FieldValues,
-  TPath extends FieldPathByValue<TFieldValues, boolean | number | string>,
+  TPath extends FieldPathByValue<TFieldValues, boolean | null | number | string | undefined>,
 >({
-  children,
   containerClassName,
   control,
   defaultValue,
   name,
   ...props
-}: FormSelectProps<TFieldValues, TPath>): ReactElement | null => {
+}: FormSwitchProps<TFieldValues, TPath>): ReactElement | null => {
   const { field, fieldState } = useController({
     control,
     defaultValue,
@@ -30,13 +29,12 @@ export const FormSelect = <
   });
 
   return (
-    <Select
+    <Switch
       {...props}
-      defaultValue={field.value}
+      {...field}
+      checked={field.value}
       error={fieldState.isTouched && (fieldState.error?.message ?? fieldState.error?.type)}
-      onValueChange={field.onChange}
-    >
-      {children}
-    </Select>
+      onCheckedChange={field.onChange}
+    />
   );
 };
