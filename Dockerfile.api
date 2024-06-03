@@ -1,0 +1,33 @@
+FROM node:20-alpine AS builder
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+RUN pnpm add tsx -g
+
+COPY package.json pnpm-lock.yaml ./
+COPY . .
+
+
+RUN pnpm i
+RUN pnpm nx run api:build
+
+COPY apps/api/.env /app/dist/apps/api
+# COPY apps/api/.env /app
+
+CMD pnpm nx run db:migrate:deploy && pnpm nx run db:seed && cd dist/apps/api && node main.js
+
+
+# FROM node:20-alpine AS runner
+
+# WORKDIR /app
+
+# COPY --from=builder /app /app
+# COPY --from=builder /app/apps/api/.env /app
+
+# EXPOSE 3000
+
+# CMD pnpm nx run db:migrate:deploy && pnpm nx run db:seed && node dist/apps/api/main.js
+#

@@ -1,0 +1,16 @@
+{
+  "name": "cms-shared",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/cms-shared/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/cms-shared/**/*.ts", "packages/cms-shared/package.json"]
+      }
+    }
+  },
+  "tags": []
+}

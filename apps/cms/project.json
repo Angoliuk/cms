@@ -1,0 +1,62 @@
+{
+  "name": "cms",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/cms",
+  "projectType": "application",
+  "targets": {
+    "pm2": {
+      "dependsOn": [{ "dependencies": true, "target": "build" }],
+      "command": "pm2 startOrReload ./apps/cms/ecosystem.config.js --env production"
+    },
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/cms",
+        "postcssConfig": "apps/cms/postcss.config.js",
+        "tsConfig": "apps/cms/tsconfig.json"
+      },
+      "dependsOn": [{ "dependencies": true, "target": "build" }],
+      "configurations": {
+        "development": {
+          "outputPath": "apps/cms"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "dependsOn": [{ "dependencies": true, "target": "build" }],
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "cms:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "cms:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "cms:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "cms:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/cms/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,4 +1,4 @@
-import { contract } from "@/shared/api";
+import { cmsContract } from "@/cms-shared/api";
 import { ForbiddenError, formatResponse } from "@/shared/utils";
 import { Controller, Req, Res, UseGuards } from "@nestjs/common";
 import { TsRest, TsRestHandler, tsRestHandler } from "@ts-rest/nest";
@@ -14,28 +14,34 @@ import { AuthService } from "./auth.service";
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AccessTokenGuard)
-  @TsRestHandler(contract.auth.logout)
-  async logout(
-    @GetUser()
-    user: TokenUser,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    return tsRestHandler(contract.auth.logout, async () => {
+  @TsRestHandler(cmsContract.auth.logout)
+  async logout(@Res({ passthrough: true }) res: Response) {
+    return tsRestHandler(cmsContract.auth.logout, async () => {
       const logoutResponse = await this.authService.logout();
       await this.authService.removeTokensFromCookies({ res });
       return formatResponse(logoutResponse);
     });
   }
 
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.auth.me)
+  async me(
+    @GetUser()
+    user: TokenUser,
+  ) {
+    return tsRestHandler(cmsContract.auth.me, async () => {
+      const meResponse = await this.authService.me(user.userId);
+      return formatResponse(meResponse);
+    });
+  }
+
   @UseGuards(RefreshTokenGuard)
-  @TsRestHandler(contract.auth.refreshTokens)
+  @TsRestHandler(cmsContract.auth.refreshTokens)
   async refreshTokens(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
-    return tsRestHandler(contract.auth.refreshTokens, async () => {
+    return tsRestHandler(cmsContract.auth.refreshTokens, async () => {
       if (!req.user) return formatResponse(new ForbiddenError("Wrong user"));
 
       const refreshTokensResponse = await this.authService.signTokens({
-        email: req.user.email,
         userId: req.user.userId,
       });
 
@@ -49,9 +55,9 @@ export class AuthController {
     });
   }
 
-  @TsRestHandler(contract.auth.signIn)
+  @TsRestHandler(cmsContract.auth.signIn)
   async signIn(@Res({ passthrough: true }) res: Response) {
-    return tsRestHandler(contract.auth.signIn, async ({ body }) => {
+    return tsRestHandler(cmsContract.auth.signIn, async ({ body }) => {
       const signedInUser = await this.authService.signIn(body);
 
       if ("accessToken" in signedInUser) {
@@ -66,9 +72,9 @@ export class AuthController {
     });
   }
 
-  @TsRestHandler(contract.auth.signUp)
+  @TsRestHandler(cmsContract.auth.signUp)
   async signUp(@Res({ passthrough: true }) res: Response) {
-    return tsRestHandler(contract.auth.signUp, async ({ body }) => {
+    return tsRestHandler(cmsContract.auth.signUp, async ({ body }) => {
       const signedUpUser = await this.authService.signUp(body);
 
       if ("accessToken" in signedUpUser) {
