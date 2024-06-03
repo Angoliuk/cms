@@ -1,6 +1,7 @@
 import { Card } from "@/ui-shared/components/card";
 import { PageWrapper } from "@/ui-shared/components/page-wrapper";
 
+import { Header } from "../../../components/header/header";
 import { TagsSearchInput } from "../../../components/tags-search-input";
 import { api } from "../../../utils/api";
 import { NewsList } from "../components/news-list";
@@ -22,7 +23,7 @@ export default async function NewsTagSearchPage({ searchParams }: NewsTagSearchP
 
   if (status !== 200) {
     return (
-      <PageWrapper contentWrapperClassName="items-center" isHeaderShown={false}>
+      <PageWrapper contentWrapperClassName="items-center" header={<Header />}>
         <Card className="mt-12 w-full max-w-7xl px-6 py-4">
           <p className="text-headlineS mb-4 text-center">News tag search</p>
           <p className="text-headlineS mb-4 text-center">News not found</p>
@@ -32,7 +33,7 @@ export default async function NewsTagSearchPage({ searchParams }: NewsTagSearchP
   }
 
   return (
-    <PageWrapper contentWrapperClassName="items-center" isHeaderShown={false}>
+    <PageWrapper contentWrapperClassName="items-center" header={<Header />}>
       <Card className="mt-12 w-full max-w-7xl px-6 py-4">
         <p className="text-headlineS mb-4 text-center">News tag search</p>
         <TagsSearchInput />

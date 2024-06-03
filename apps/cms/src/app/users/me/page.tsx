@@ -1,6 +1,7 @@
 import { Card } from "@/ui-shared/components/card";
 import { PageWrapper } from "@/ui-shared/components/page-wrapper";
 
+import { Header } from "../../../components/header";
 import { api } from "../../../utils/api";
 import { LogoutButton } from "./logout-button";
 
@@ -14,7 +15,7 @@ export default async function Index() {
 
   if (currentUser.status !== 200) {
     return (
-      <PageWrapper contentWrapperClassName="items-center" isHeaderShown={false}>
+      <PageWrapper contentWrapperClassName="items-center" header={<Header />}>
         <Card className="mt-12 w-full max-w-[512px] px-6 py-4">
           <p>Session not found</p>
           <LogoutButton handleLogout={logout} />
@@ -24,7 +25,7 @@ export default async function Index() {
   }
 
   return (
-    <PageWrapper contentWrapperClassName="items-center" isHeaderShown={false}>
+    <PageWrapper contentWrapperClassName="items-center" header={<Header />}>
       <Card className="mt-12 w-full max-w-[512px] px-6 py-4">
         <p className="text-headlineS mb-4 text-center">Profile</p>
         <p>{currentUser.body.id}</p>

@@ -1,6 +1,7 @@
 import { Card } from "@/ui-shared/components/card";
 import { PageWrapper } from "@/ui-shared/components/page-wrapper";
 
+import { Header } from "../../components/header";
 import { ListPagination } from "../../components/list-pagination";
 import { api } from "../../utils/api";
 import { loggedOutProtection } from "../../utils/auth-protection";
@@ -23,7 +24,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
 
   if (status !== 200) {
     return (
-      <PageWrapper contentWrapperClassName="items-center" isHeaderShown={false}>
+      <PageWrapper contentWrapperClassName="items-center" header={<Header />}>
         <Card className="mt-12 w-full max-w-[1024px] px-6 py-4">
           <p className="text-headlineS mb-4 text-center">News</p>
           <p className="text-headlineS mb-4 text-center">News not found</p>
@@ -32,7 +33,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     );
   }
   return (
-    <PageWrapper contentWrapperClassName="items-center" isHeaderShown={false}>
+    <PageWrapper contentWrapperClassName="items-center" header={<Header />}>
       <Card className="mt-12 w-full max-w-[1024px] px-6 py-4">
         <p className="text-headlineS mb-4 text-center">News</p>
         <NewsList newsList={newsResponse.items} />
