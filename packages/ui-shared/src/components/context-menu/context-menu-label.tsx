@@ -10,7 +10,11 @@ export const ContextMenuLabel = forwardRef<
   }
 >(({ className, inset, ...props }, ref) => (
   <Label
-    className={tw("px-2 py-1.5 text-sm font-semibold text-stone-950 dark:text-stone-50", inset && "pl-8", className)}
+    className={tw(
+      "px-2 py-1.5 text-sm font-semibold text-stone-950 dark:text-stone-50",
+      inset && "pl-8",
+      className,
+    )}
     ref={ref}
     {...props}
   />

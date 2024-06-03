@@ -3,6 +3,7 @@ import { ContractInstance } from "@/shared/types";
 import {
   BadRequestError,
   ForbiddenError,
+  JWTError,
   NotFoundError,
   RequestValidationError,
   ResponseValidationError,
@@ -34,7 +35,7 @@ export const usersContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: createUserResponseSchema,
@@ -49,7 +50,7 @@ export const usersContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: deleteUserResponseSchema,
@@ -63,7 +64,7 @@ export const usersContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getUsersResponseSchema,
@@ -77,7 +78,7 @@ export const usersContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getByIdUserResponseSchema,
@@ -92,7 +93,7 @@ export const usersContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: updateUserResponseSchema,

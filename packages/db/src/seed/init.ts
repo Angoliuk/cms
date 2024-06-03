@@ -1,18 +1,33 @@
 import { PrismaClient } from "@prisma/client";
+import * as argon2 from "argon2";
 
 const prisma = new PrismaClient();
 
 async function main() {
   const usersCount = await prisma.user.count();
 
-  if (usersCount < 1) return;
+  console.log("Current users count: ", usersCount);
 
-  await prisma.user.create({
-    data: {
-      email: "admin@admin.com",
-      password: "123123123",
-    },
-  });
+  if (usersCount === 0) {
+    const passwordHash = await argon2.hash("123123123");
+    await prisma.user.create({
+      data: {
+        email: "admin@admin.com",
+        password: passwordHash,
+      },
+    });
+  }
+
+  const configsCount = await prisma.promotionConfig.count();
+
+  if (configsCount === 0) {
+    await prisma.promotionConfig.createMany({
+      data: [
+        { location: "LIST", promotionsPerPage: 2 },
+        { location: "SEARCH", promotionsPerPage: 2 },
+      ],
+    });
+  }
 }
 
 main()

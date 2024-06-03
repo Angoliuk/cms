@@ -1,8 +1,10 @@
-import { contract } from "@/shared/api";
+import { cmsContract } from "@/cms-shared/api";
 import { NotFoundError, formatResponse, getPaginatedResponse } from "@/shared/utils";
-import { Controller } from "@nestjs/common";
+import { Controller, UseGuards } from "@nestjs/common";
 import { TsRest, TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 
+import { AccessTokenGuard } from "../../guards";
+import { getPaginationSelectFromQuery } from "../../utils";
 import { SourcesService } from "./sources.service";
 
 @Controller()
@@ -10,29 +12,37 @@ import { SourcesService } from "./sources.service";
 export class SourcesController {
   constructor(private sourcesService: SourcesService) {}
 
-  @TsRestHandler(contract.sources.create)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.sources.create)
   async create() {
-    return tsRestHandler(contract.sources.create, async ({ body }) => {
+    return tsRestHandler(cmsContract.sources.create, async ({ body }) => {
       const source = await this.sourcesService.create({ data: body });
       return formatResponse(source);
     });
   }
 
-  @TsRestHandler(contract.sources.delete)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.sources.delete)
   async delete() {
-    return tsRestHandler(contract.sources.delete, async ({ params }) => {
+    return tsRestHandler(cmsContract.sources.delete, async ({ params }) => {
       const source = await this.sourcesService.delete({ where: { id: params.sourceId } });
       return formatResponse(source);
     });
   }
 
-  @TsRestHandler(contract.sources.get)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.sources.get)
   async get() {
-    return tsRestHandler(contract.sources.get, async ({ query }) => {
+    return tsRestHandler(cmsContract.sources.get, async ({ query }) => {
       const { limit, orderBy, page } = query;
-      const sources = await this.sourcesService.get({ orderBy, skip: page, take: limit });
+      const sources = await this.sourcesService.get({
+        orderBy,
+        ...getPaginationSelectFromQuery(page, limit),
+      });
+      const count = await this.sourcesService.count({});
 
       const response = getPaginatedResponse(sources, {
+        count,
         limit,
         page,
       });
@@ -40,9 +50,10 @@ export class SourcesController {
     });
   }
 
-  @TsRestHandler(contract.sources.getById)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.sources.getById)
   async getById() {
-    return tsRestHandler(contract.sources.getById, async ({ params }) => {
+    return tsRestHandler(cmsContract.sources.getById, async ({ params }) => {
       const source = await this.sourcesService.getOne({ where: { id: params.sourceId } });
 
       if (!source) return formatResponse(new NotFoundError("Source not found"));
@@ -51,10 +62,14 @@ export class SourcesController {
     });
   }
 
-  @TsRestHandler(contract.sources.update)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.sources.update)
   async update() {
-    return tsRestHandler(contract.sources.update, async ({ body, params }) => {
-      const source = await this.sourcesService.update({ data: body, where: { id: params.sourceId } });
+    return tsRestHandler(cmsContract.sources.update, async ({ body, params }) => {
+      const source = await this.sourcesService.update({
+        data: body,
+        where: { id: params.sourceId },
+      });
       return formatResponse(source);
     });
   }

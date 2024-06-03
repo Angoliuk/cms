@@ -6,11 +6,11 @@ import { Input, InputProps } from "./input";
 export type FormInputProps<
   TFieldValues extends FieldValues,
   TPath extends FieldPathByValue<TFieldValues, boolean | null | number | string | undefined>,
-> = Omit<InputProps, "defaultValue" | "onBlur" | "onChange" | "value"> & {
+> = {
   control: Control<TFieldValues>;
   defaultValue?: PathValue<TFieldValues, TPath>;
   name: TPath;
-};
+} & Omit<InputProps, "defaultValue" | "onBlur" | "onChange" | "value">;
 
 export const FormInput = <
   TFieldValues extends FieldValues,

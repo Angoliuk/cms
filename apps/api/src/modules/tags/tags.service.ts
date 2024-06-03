@@ -1,5 +1,3 @@
-import type { DefaultArgs } from "@prisma/client/runtime/library";
-
 import { Prisma } from "@/db";
 import { Injectable } from "@nestjs/common";
 
@@ -9,23 +7,39 @@ import { PrismaService } from "../prisma";
 export class TagsService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ data, select }: Prisma.TagCreateArgs<DefaultArgs>) {
-    return await this.prisma.tag.create({ data, select });
+  async count<T extends Prisma.TagCountArgs>(
+    countData: Prisma.SelectSubset<T, Prisma.TagCountArgs>,
+  ) {
+    return await this.prisma.tag.count(countData);
   }
 
-  async delete(deleteData: Prisma.TagDeleteArgs<DefaultArgs>) {
+  async create<T extends Prisma.TagCreateArgs>(
+    createData: Prisma.SelectSubset<T, Prisma.TagCreateArgs>,
+  ) {
+    return await this.prisma.tag.create(createData);
+  }
+
+  async delete<T extends Prisma.TagDeleteArgs>(
+    deleteData: Prisma.SelectSubset<T, Prisma.TagDeleteArgs>,
+  ) {
     return await this.prisma.tag.delete(deleteData);
   }
 
-  async get(getData: Prisma.TagFindManyArgs<DefaultArgs>) {
+  async get<T extends Prisma.TagFindManyArgs>(
+    getData: Prisma.SelectSubset<T, Prisma.TagFindManyArgs>,
+  ) {
     return await this.prisma.tag.findMany(getData);
   }
 
-  async getOne(getData: Prisma.TagFindUniqueArgs<DefaultArgs>) {
+  async getOne<T extends Prisma.TagFindUniqueArgs>(
+    getData: Prisma.SelectSubset<T, Prisma.TagFindUniqueArgs>,
+  ) {
     return await this.prisma.tag.findUnique(getData);
   }
 
-  async update(updateData: Prisma.TagUpdateArgs<DefaultArgs>) {
+  async update<T extends Prisma.TagUpdateArgs>(
+    updateData: Prisma.SelectSubset<T, Prisma.TagUpdateArgs>,
+  ) {
     return await this.prisma.tag.update(updateData);
   }
 }

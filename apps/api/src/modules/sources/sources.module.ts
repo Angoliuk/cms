@@ -2,7 +2,8 @@ import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 
 import { Queues } from "../bullmq";
-import { PrismaModule } from "../prisma";
+import { MinioModule } from "../minio";
+import { NewsModule } from "../news";
 import { SourcesProcessor } from "./source.processor";
 import { SourcesController } from "./sources.controller";
 import { SourcesService } from "./sources.service";
@@ -11,10 +12,11 @@ import { SourcesService } from "./sources.service";
   controllers: [SourcesController],
   exports: [SourcesService],
   imports: [
-    PrismaModule,
+    NewsModule,
     BullModule.registerQueue({
       name: Queues.SOURCES_PARSER,
     }),
+    MinioModule,
   ],
   providers: [SourcesService, SourcesProcessor],
 })

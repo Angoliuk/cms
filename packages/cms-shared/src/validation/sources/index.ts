@@ -1,5 +1,3 @@
-// TODO: investigate @nx/enforce-module-boundaries error for prisma import
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { SOURCE_PERIOD } from "@/db";
 import { sourceIdSchema, sourceSchema } from "@/shared/types";
 import { getBaseQuerySchema, getPaginatedResponseValidation } from "@/shared/utils/validation";
@@ -7,9 +5,15 @@ import { z } from "zod";
 
 export type CreateSourceBodySchema = z.infer<typeof createSourceBodySchema>;
 export const createSourceBodySchema = z.object({
+  descriptionKey: z.string().nullish(),
+  idKey: z.string().min(1),
+  imageLinkKey: z.string().nullish(),
   isActive: z.boolean(),
+  linkKey: z.string().min(1),
   name: z.string().min(1),
   periodicity: z.nativeEnum(SOURCE_PERIOD),
+  publicationDateKey: z.string().min(1),
+  titleKey: z.string().min(1),
   url: z.string().min(1),
 });
 
@@ -39,9 +43,15 @@ export const updateSourcePathParamsSchema = z.object({ sourceId: sourceIdSchema 
 
 export type UpdateSourceBodySchema = z.infer<typeof updateSourceBodySchema>;
 export const updateSourceBodySchema = z.object({
+  descriptionKey: z.string().nullish(),
+  idKey: z.string().min(1),
+  imageLinkKey: z.string().nullish(),
   isActive: z.boolean(),
+  linkKey: z.string().min(1),
   name: z.string().min(1),
   periodicity: z.nativeEnum(SOURCE_PERIOD),
+  publicationDateKey: z.string().min(1),
+  titleKey: z.string().min(1),
   url: z.string().min(1),
 });
 

@@ -1,26 +1,21 @@
 "use client";
 import { Input, InputProps } from "@/ui-shared/components/input";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FC } from "react";
 
-import { useDebounce } from "../../hooks";
+import { useDebounce } from "../../hooks/debounce";
+import { useSearchParam } from "../../hooks/search-param";
 
 export type TextSearchInputProps = { key?: string } & Omit<InputProps, "onChange">;
 
 export const TextSearchInput: FC<TextSearchInputProps> = ({ key = "search", ...inputProps }) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { handleParamChange } = useSearchParam({ key });
 
-  const { debounceCallback: onSearchChange } = useDebounce<ChangeEvent<HTMLInputElement>>({
+  const { debounceCallback: handleSearchChange } = useDebounce<ChangeEvent<HTMLInputElement>>({
     callback: event => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(key, event?.target?.value ?? "");
-
-      router.push(pathname + "?" + params.toString());
+      handleParamChange(event?.target?.value);
     },
     debounce: 300,
   });
 
-  return <Input {...inputProps} onChange={onSearchChange} />;
+  return <Input {...inputProps} onChange={handleSearchChange} />;
 };

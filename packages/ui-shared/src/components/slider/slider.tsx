@@ -6,7 +6,11 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 
 export const Slider = forwardRef<ElementRef<typeof Root>, ComponentPropsWithoutRef<typeof Root>>(
   ({ className, ...props }, ref) => (
-    <Root className={tw("relative flex w-full touch-none select-none items-center", className)} ref={ref} {...props}>
+    <Root
+      className={tw("relative flex w-full touch-none select-none items-center", className)}
+      ref={ref}
+      {...props}
+    >
       <Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-stone-900/20 dark:bg-stone-50/20">
         <Range className="absolute h-full bg-stone-900 dark:bg-stone-50" />
       </Track>

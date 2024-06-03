@@ -1,10 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import * as Minio from "minio";
+import { v4 as uuidv4 } from "uuid";
 
 import { EnvService } from "../env";
+import { BUCKETS, Buckets, MinioFile } from "./minio.constants";
 
 @Injectable()
-export class MinioService {
+export class MinioService implements OnModuleInit {
   private readonly minioClient: Minio.Client;
 
   constructor(private envService: EnvService) {
@@ -17,27 +19,38 @@ export class MinioService {
     });
   }
 
-  async create() {
-    return;
+  async deleteFile(bucketName: Buckets, fileName: string) {
+    await this.minioClient.removeObject(bucketName, fileName);
   }
 
-  async delete() {
-    return;
+  async getFile(bucketName: Buckets, fileName: string) {
+    return await this.minioClient.getObject(bucketName, fileName);
   }
 
-  async find() {
-    return;
-  }
-
-  async findOne() {
-    return;
+  async getFileUrl(bucketName: Buckets, fileName: string) {
+    return await this.minioClient.presignedGetObject(bucketName, fileName);
   }
 
   async onModuleInit() {
-    return;
+    console.log("Buckets: ", await this.minioClient.listBuckets());
+    for (const bucket of BUCKETS) {
+      const bucketExists = await this.minioClient.bucketExists(bucket);
+      if (!bucketExists) {
+        await this.minioClient.makeBucket(bucket);
+      }
+    }
   }
 
-  async update() {
-    return;
+  async updateFile(bucketName: Buckets, fileName: string, file: MinioFile) {
+    await this.deleteFile(bucketName, fileName);
+    return await this.uploadFile(bucketName, file);
+  }
+
+  async uploadFile(bucketName: Buckets, file: MinioFile) {
+    const fileName = `${uuidv4()}-${file.originalname}`;
+
+    await this.minioClient.putObject(bucketName, fileName, file.buffer);
+
+    return { fileName };
   }
 }

@@ -7,7 +7,11 @@ export type UseDebounceProps<T> = {
   outsideCallback?: (arg: T, cancelTimeout: () => void) => void;
 };
 
-export const useDebounce = <T,>({ callback, debounce = 300, outsideCallback }: UseDebounceProps<T>) => {
+export const useDebounce = <T,>({
+  callback,
+  debounce = 300,
+  outsideCallback,
+}: UseDebounceProps<T>) => {
   const timeout = useRef<NodeJS.Timeout | null>(null);
 
   const cancelTimeout = useCallback(() => {

@@ -7,6 +7,7 @@ import { EnvModule } from "./env";
 import { MinioModule } from "./minio";
 import { NewsModule } from "./news";
 import { PrismaModule } from "./prisma";
+import { PromotionsModule } from "./promotions";
 import { SourcesModule } from "./sources";
 import { TagsModule } from "./tags";
 import { UsersModule } from "./users";
@@ -15,11 +16,12 @@ import { UsersModule } from "./users";
   imports: [
     PrismaModule,
     EnvModule,
-    PrismaModule,
     AuthModule,
+    NewsModule,
     UsersModule,
     TagsModule,
     SourcesModule,
+    PromotionsModule,
     NewsModule,
     MinioModule,
     BullMQConfig,

@@ -9,15 +9,35 @@ import {
   ServerError,
 } from "@/shared/utils";
 
-import { getNewsQuerySchema, getNewsResponseSchema } from "../validation";
+import {
+  getByIdNewsPathParamsSchema,
+  getByIdNewsResponseSchema,
+  getListNewsQuerySchema,
+  getListNewsResponseSchema,
+  getSearchNewsQuerySchema,
+  getSearchNewsResponseSchema,
+} from "../validation";
 
 export const newsContract = (c: ContractInstance) =>
   c.router(
     {
-      get: {
+      getById: {
         method: "GET",
-        path: "/get",
-        query: getNewsQuerySchema,
+        path: "/get-by-id/:newsId",
+        pathParams: getByIdNewsPathParamsSchema,
+        responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
+          [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
+          [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
+          [STATUS_CODES.SUCCESS]: getByIdNewsResponseSchema,
+        },
+      },
+      getForList: {
+        method: "GET",
+        path: "/get/list",
+        query: getListNewsQuerySchema,
         responses: {
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
@@ -25,7 +45,21 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
-          [STATUS_CODES.SUCCESS]: getNewsResponseSchema,
+          [STATUS_CODES.SUCCESS]: getListNewsResponseSchema,
+        },
+      },
+      getForSearch: {
+        method: "GET",
+        path: "/get/search",
+        query: getSearchNewsQuerySchema,
+        responses: {
+          [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
+            .or(ResponseValidationError.zodSchema)
+            .or(RequestValidationError.zodSchema),
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
+          [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
+          [STATUS_CODES.SUCCESS]: getSearchNewsResponseSchema,
         },
       },
     },

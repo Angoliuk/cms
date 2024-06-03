@@ -1,18 +1,21 @@
 import { Input } from "@/ui-shared/components/input";
 import React, { ChangeEventHandler, KeyboardEventHandler, useState } from "react";
 
-import { useDebounce } from "../../hooks";
+import { useDebounce } from "../../hooks/debounce";
 
 type TagsInputProps = {
+  handleChange: (tags: string[]) => void;
   initialTags?: string[] | undefined;
-  onChange: (tags: string[]) => void;
 };
 
-export const TagsInput = ({ initialTags, onChange }: TagsInputProps) => {
+export const TagsInput = ({ handleChange, initialTags }: TagsInputProps) => {
   const [tags, setTags] = useState<string[]>(initialTags ?? []);
   const [inputValue, setInputValue] = useState<string>("");
 
-  const { debounceCallback: debounceOnChange } = useDebounce<string[]>({ callback: onChange, debounce: 300 });
+  const { debounceCallback: handleDebounceChange } = useDebounce<string[]>({
+    callback: handleChange,
+    debounce: 300,
+  });
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = event => {
     setInputValue(event.target.value);
@@ -22,7 +25,7 @@ export const TagsInput = ({ initialTags, onChange }: TagsInputProps) => {
     if (event.key === "Enter" && inputValue.trim() !== "") {
       const updatedTags = [...tags, inputValue.trim()];
       setTags([...tags, inputValue.trim()]);
-      debounceOnChange(updatedTags);
+      handleDebounceChange(updatedTags);
       setInputValue("");
     }
   };
@@ -30,7 +33,7 @@ export const TagsInput = ({ initialTags, onChange }: TagsInputProps) => {
   const handleTagRemove = (tagToRemove: string) => {
     const updatedTags = tags.filter(tag => tag !== tagToRemove);
     setTags(tags.filter(tag => tag !== tagToRemove));
-    debounceOnChange(updatedTags);
+    handleDebounceChange(updatedTags);
   };
 
   return (

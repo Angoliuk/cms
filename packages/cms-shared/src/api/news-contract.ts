@@ -3,6 +3,7 @@ import { ContractInstance } from "@/shared/types";
 import {
   BadRequestError,
   ForbiddenError,
+  JWTError,
   NotFoundError,
   RequestValidationError,
   ResponseValidationError,
@@ -36,7 +37,7 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: createNewsResponseSchema,
@@ -51,7 +52,7 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: deleteNewsResponseSchema,
@@ -65,7 +66,7 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getNewsResponseSchema,
@@ -79,7 +80,7 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getByIdNewsResponseSchema,
@@ -93,7 +94,7 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getNewsOptionsResponseSchema,
@@ -108,7 +109,7 @@ export const newsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: updateNewsResponseSchema,

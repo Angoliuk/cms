@@ -5,19 +5,24 @@ import { ToggleGroup, ToggleGroupProps } from "./toggle-group";
 
 export type FormToggleGroupProps<
   TFieldValues extends FieldValues,
-  TPath extends FieldPathByValue<TFieldValues, boolean | null | number | string | string[] | undefined>,
-> = Omit<ToggleGroupProps, "defaultValue" | "onBlur" | "onChange" | "value"> & {
+  TPath extends FieldPathByValue<
+    TFieldValues,
+    boolean | null | number | string | string[] | undefined
+  >,
+> = {
   control: Control<TFieldValues>;
   defaultValue?: PathValue<TFieldValues, TPath>;
   name: TPath;
-} & { containerClassName?: string };
+} & Omit<ToggleGroupProps, "defaultValue" | "onBlur" | "onChange" | "value">;
 
 export const FormToggleGroup = <
   TFieldValues extends FieldValues,
-  TPath extends FieldPathByValue<TFieldValues, boolean | null | number | string | string[] | undefined>,
+  TPath extends FieldPathByValue<
+    TFieldValues,
+    boolean | null | number | string | string[] | undefined
+  >,
 >({
   children,
-  containerClassName,
   control,
   defaultValue,
   name,
@@ -33,7 +38,7 @@ export const FormToggleGroup = <
     <ToggleGroup
       {...props}
       defaultValue={field.value}
-      // error={fieldState.isTouched && (fieldState.error?.message ?? fieldState.error?.type)}
+      error={fieldState.isTouched && (fieldState.error?.message ?? fieldState.error?.type)}
       onValueChange={field.onChange}
     >
       {children}

@@ -1,8 +1,11 @@
-import { TokenUser } from "./validation";
+import { EnvSchema, TokenUser } from "./validation";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
-    export interface User extends TokenUser {}
+    export type User = TokenUser;
+  }
+
+  namespace NodeJS {
+    export type ProcessEnv = EnvSchema;
   }
 }

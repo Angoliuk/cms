@@ -18,11 +18,16 @@ export const getPaginatedResponseValidation = <T extends ZodTypeAny>(itemSchema:
   });
 };
 
-export const getBaseQuerySchema = <T extends AnyZodObject, C extends [keyof T["shape"]]>(entitySchema: T) => {
+export const getBaseQuerySchema = <T extends AnyZodObject, C extends [keyof T["shape"]]>(
+  entitySchema: T,
+) => {
   return z
     .object({
-      // @ts-expect-error enum do not want to accept C as generic
-      orderBy: z.record(z.enum<string, C>(Object.keys(entitySchema.shape) as C), sortOrderSchema).optional(),
+      orderBy: z
+        // TODO: Fix @ts-expect-error wrong type
+        // @ts-expect-error enum do not want to accept C as generic
+        .record(z.enum<string, C>(Object.keys(entitySchema.shape) as C), sortOrderSchema)
+        .optional(),
     })
     .and(paginationQuerySchema);
 };

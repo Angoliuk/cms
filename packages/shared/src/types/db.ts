@@ -1,31 +1,51 @@
-import { NEWS_VISIBILITY, PROMOTION_LOCATION, PROMOTION_LOCATION_LIST_TYPE, SOURCE_PERIOD } from "@prisma/client";
+import {
+  NEWS_VISIBILITY,
+  PROMOTION_LOCATION,
+  PROMOTION_LOCATION_LIST_TYPE,
+  SOURCE_PERIOD,
+} from "@prisma/client";
 import { z } from "zod";
 
 import { uniqueEnumArray } from "../utils";
 
 export type UserIdSchema = z.infer<typeof userIdSchema>;
-export const userIdSchema = z.string().min(1);
+export const userIdSchema = z.string().uuid();
 
 export type TagIdSchema = z.infer<typeof tagIdSchema>;
-export const tagIdSchema = z.string().min(1);
+export const tagIdSchema = z.string().uuid();
 
 export type SourceIdSchema = z.infer<typeof sourceIdSchema>;
-export const sourceIdSchema = z.string().min(1);
+export const sourceIdSchema = z.string().uuid();
+
+export type PromotionsConfigIdSchema = z.infer<typeof promotionsConfigIdSchema>;
+export const promotionsConfigIdSchema = z.string().uuid();
 
 export type PromotionIdSchema = z.infer<typeof promotionIdSchema>;
-export const promotionIdSchema = z.string().min(1);
+export const promotionIdSchema = z.string().uuid();
 
 export type NewsIdSchema = z.infer<typeof newsIdSchema>;
-export const newsIdSchema = z.string().min(1);
+export const newsIdSchema = z.string().uuid();
 
 export type TokensSchema = z.infer<typeof tokensSchema>;
-export const tokensSchema = z.object({ accessToken: z.string().min(1), refreshToken: z.string().min(1) });
+export const tokensSchema = z.object({
+  accessToken: z.string().min(1),
+  refreshToken: z.string().min(1),
+});
+
+export type TagSchema = z.infer<typeof tagSchema>;
+export const tagSchema = z.object({
+  createdAt: z.coerce.date(),
+  id: tagIdSchema,
+  name: z.string().min(1),
+  updatedAt: z.coerce.date(),
+});
 
 export type NewsSchema = z.infer<typeof newsSchema>;
 export const newsSchema = z.object({
   createdAt: z.coerce.date(),
   deletedAt: z.coerce.date().nullable(),
   description: z.string().nullable(),
+  externalId: z.string().min(1),
   id: newsIdSchema,
   imageLink: z.string().nullable(),
   isDraft: z.boolean(),
@@ -39,14 +59,14 @@ export const newsSchema = z.object({
 export type NewsWithTagsIdsSchema = z.infer<typeof newsWithTagsIdsSchema>;
 export const newsWithTagsIdsSchema = newsSchema.and(
   z.object({
-    tags: z.array(z.string()),
+    tags: z.array(tagIdSchema),
   }),
 );
 
 export type NewsWithTagsSchema = z.infer<typeof newsWithTagsSchema>;
 export const newsWithTagsSchema = newsSchema.and(
   z.object({
-    tags: z.array(z.string()),
+    tags: z.array(tagSchema),
   }),
 );
 
@@ -61,28 +81,35 @@ export const userSchema = z.object({
   updatedAt: z.coerce.date(),
 });
 
-export type TagSchema = z.infer<typeof tagSchema>;
-export const tagSchema = z.object({
+export type PromotionsConfigSchema = z.infer<typeof promotionsConfigSchema>;
+export const promotionsConfigSchema = z.object({
   createdAt: z.coerce.date(),
-  id: tagIdSchema,
-  name: z.string().min(1),
+  id: promotionsConfigIdSchema,
+  location: z.nativeEnum(PROMOTION_LOCATION),
+  promotionsPerPage: z.coerce.number().min(0),
   updatedAt: z.coerce.date(),
 });
 
 export type SourceSchema = z.infer<typeof sourceSchema>;
 export const sourceSchema = z.object({
   createdAt: z.coerce.date(),
+  descriptionKey: z.string().nullish(),
   id: sourceIdSchema,
+  idKey: z.string().min(1),
+  imageLinkKey: z.string().nullish(),
   isActive: z.boolean(),
+  linkKey: z.string().min(1),
   name: z.string().min(1),
   periodicity: z.nativeEnum(SOURCE_PERIOD),
+  publicationDateKey: z.string().min(1),
+  titleKey: z.string().min(1),
   updatedAt: z.coerce.date(),
   url: z.string().min(1),
 });
 
 const basePromotionSchema = z.object({
   createdAt: z.coerce.date(),
-  id: z.string().min(1),
+  id: promotionIdSchema,
   isDraft: z.boolean(),
   locations: uniqueEnumArray(PROMOTION_LOCATION),
   updatedAt: z.coerce.date(),
@@ -138,19 +165,26 @@ export const listPromotionWithTextSchema = baseListPromotionSchema.and(
 export type ListPromotionWithNewsSchema = z.infer<typeof listPromotionWithNewsSchema>;
 export const listPromotionWithNewsSchema = baseListPromotionSchema.and(
   z.object({
-    newsId: z.string().min(1),
+    newsId: newsIdSchema,
   }),
 );
 
-export type PromotionSchema = z.infer<typeof promotionSchema>;
-export const promotionSchema = z.union([
+export type SearchPromotionSchema = z.infer<typeof searchPromotionSchema>;
+export const searchPromotionSchema = z.union([
   searchPromotionWithTextSchema,
   searchPromotionWithNewsSchema,
   searchPromotionWithImageSchema,
+]);
+
+export type ListPromotionSchema = z.infer<typeof listPromotionSchema>;
+export const listPromotionSchema = z.union([
   listPromotionWithImageSchema,
   listPromotionWithTextSchema,
   listPromotionWithNewsSchema,
 ]);
+
+export type PromotionSchema = z.infer<typeof promotionSchema>;
+export const promotionSchema = z.union([searchPromotionSchema, listPromotionSchema]);
 
 export type PromotionsSchema = z.infer<typeof promotionsSchema>;
 export const promotionsSchema = z.array(promotionSchema);

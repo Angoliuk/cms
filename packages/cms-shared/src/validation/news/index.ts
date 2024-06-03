@@ -1,7 +1,5 @@
-// TODO: investigate @nx/enforce-module-boundaries error for prisma import
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { NEWS_VISIBILITY } from "@/db";
-import { newsIdSchema, newsSchema } from "@/shared/types";
+import { newsIdSchema, newsSchema, newsWithTagsSchema, tagIdSchema } from "@/shared/types";
 import { getBaseQuerySchema, getPaginatedResponseValidation } from "@/shared/utils/validation";
 import { z } from "zod";
 
@@ -14,6 +12,7 @@ export const newsOptionSchema = z.object({
 export type CreateNewsBodySchema = z.infer<typeof createNewsBodySchema>;
 export const createNewsBodySchema = z.object({
   description: z.string().nullable(),
+  externalId: z.string().min(1),
   imageLink: z.string().nullable(),
   isDraft: z.boolean(),
   originalLink: z.string(),
@@ -35,7 +34,7 @@ export type GetNewsQuerySchema = z.infer<typeof getNewsQuerySchema>;
 export const getNewsQuerySchema = getBaseQuerySchema(newsSchema);
 
 export type GetNewsResponseSchema = z.infer<typeof getNewsResponseSchema>;
-export const getNewsResponseSchema = getPaginatedResponseValidation(newsSchema);
+export const getNewsResponseSchema = getPaginatedResponseValidation(newsWithTagsSchema);
 
 export type GetNewsOptionsQuerySchema = z.infer<typeof getNewsOptionsQuerySchema>;
 export const getNewsOptionsQuerySchema = getBaseQuerySchema(newsOptionSchema);
@@ -59,6 +58,7 @@ export const updateNewsBodySchema = z.object({
   isDraft: z.boolean(),
   originalLink: z.string(),
   originalPublicationDate: z.coerce.date(),
+  tags: z.array(tagIdSchema),
   title: z.string().min(1),
   visibility: z.nativeEnum(NEWS_VISIBILITY),
 });

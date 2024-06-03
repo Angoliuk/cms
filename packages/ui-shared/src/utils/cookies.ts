@@ -5,8 +5,9 @@ const oneDay = 24 * 60 * 60 * 1000;
 export const cookiesUtil = <T>(key: string) => ({
   delete: () => cookies().delete(key),
   get: () => {
-    // TODO: use zod for validation of local storage
+    // TODO: use zod for validation of values
     const response = cookies().get(key)?.value;
+
     if (!response) return null;
     try {
       return JSON.parse(response) as T;

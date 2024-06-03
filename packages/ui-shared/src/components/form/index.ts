@@ -1,3 +1,4 @@
+"use client";
 export * from "./custom-use-form";
 export { type Resolver as ZodResolver, zodResolver } from "@hookform/resolvers/zod";
 export {

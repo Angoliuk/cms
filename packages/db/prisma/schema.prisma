@@ -32,9 +32,10 @@ model News {
   imageLink               String?
   originalPublicationDate DateTime
   originalLink            String
+  externalId              String          @unique
   visibility              NEWS_VISIBILITY @default(VISIBLE)
   isDraft                 Boolean         @default(false)
-  tags                    TagsOnNews[]
+  tags                    Tag[]
   promotions              Promotion[]
 
   createdAt DateTime  @default(now())
@@ -46,22 +47,10 @@ model Tag {
   id String @id @default(uuid())
 
   name String
-  news TagsOnNews[]
+  news News[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model TagsOnNews {
-  news   News   @relation(fields: [newsId], references: [id])
-  newsId String
-  tag    Tag    @relation(fields: [tagId], references: [id])
-  tagId  String
-
-  assignedAt DateTime @default(now())
-
-  @@id([newsId, tagId])
-  @@index([tagId])
 }
 
 enum SOURCE_PERIOD {
@@ -69,6 +58,11 @@ enum SOURCE_PERIOD {
   HOURLY
 }
 
+// Of course, it will be better to divide fields mapping to separate table,
+// where it will be connected as one-to-many sources
+// It will give us possibilities to create some features like sharing of mappings between sources
+// and it is better for architecture of app
+// but it just takes more time to implement
 model Source {
   id String @id @default(uuid())
 
@@ -76,6 +70,13 @@ model Source {
   name        String
   periodicity SOURCE_PERIOD
   isActive    Boolean       @default(true)
+
+  titleKey           String
+  descriptionKey     String?
+  imageLinkKey       String?
+  publicationDateKey String
+  linkKey            String
+  idKey              String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -114,7 +115,7 @@ model PromotionConfig {
 // 2:
 // I think the best option is to divide it for different tables
 // Like Search promotions and List promotions
-// How to make different types of content in this approach? I do not know :<
+// How to make different types of content in this approach? I do not know :<. Maybe just use two db's postgre and mongo
 model Promotion {
   id String @id @default(uuid())
 

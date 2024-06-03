@@ -9,7 +9,12 @@ import { buttonVariants } from "../button/button";
 
 export type CalendarProps = ComponentProps<typeof DayPicker>;
 
-export const Calendar: FC<CalendarProps> = ({ className, classNames, showOutsideDays = true, ...props }) => {
+export const Calendar: FC<CalendarProps> = ({
+  className,
+  classNames,
+  showOutsideDays = true,
+  ...props
+}) => {
   return (
     <DayPicker
       className={tw("p-3", className)}
@@ -17,12 +22,15 @@ export const Calendar: FC<CalendarProps> = ({ className, classNames, showOutside
         caption: "flex justify-center pt-1 relative items-center",
         caption_label: "text-sm font-medium",
         cell: tw(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-stone-100 [&:has([aria-selected].day-outside)]:bg-stone-100/50 [&:has([aria-selected].day-range-end)]:rounded-r-md dark:[&:has([aria-selected])]:bg-stone-800 dark:[&:has([aria-selected].day-outside)]:bg-stone-800/50",
+          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-stone-100 dark:[&:has([aria-selected])]:bg-stone-800 [&:has([aria-selected].day-outside)]:bg-stone-100/50 dark:[&:has([aria-selected].day-outside)]:bg-stone-800/50 [&:has([aria-selected].day-range-end)]:rounded-r-md",
           props.mode === "range"
             ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
             : "[&:has([aria-selected])]:rounded-md",
         ),
-        day: tw(buttonVariants({ variant: "ghost" }), "h-8 w-8 p-0 font-normal aria-selected:opacity-100"),
+        day: tw(
+          buttonVariants({ variant: "ghost" }),
+          "h-8 w-8 p-0 font-normal aria-selected:opacity-100",
+        ),
         day_disabled: "text-stone-500 opacity-50 dark:text-stone-400",
         day_hidden: "invisible",
         day_outside:

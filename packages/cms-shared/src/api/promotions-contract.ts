@@ -3,6 +3,7 @@ import { ContractInstance } from "@/shared/types";
 import {
   BadRequestError,
   ForbiddenError,
+  JWTError,
   NotFoundError,
   RequestValidationError,
   ResponseValidationError,
@@ -10,7 +11,8 @@ import {
 } from "@/shared/utils";
 
 import {
-  createPromotionBodySchema,
+  CreatePromotionBodySchema,
+  UpdatePromotionBodySchema,
   createPromotionResponseSchema,
   deletePromotionPathParamsSchema,
   deletePromotionResponseSchema,
@@ -18,7 +20,6 @@ import {
   getByIdPromotionResponseSchema,
   getPromotionsQuerySchema,
   getPromotionsResponseSchema,
-  updatePromotionBodySchema,
   updatePromotionPathParamsSchema,
   updatePromotionResponseSchema,
 } from "../validation";
@@ -27,14 +28,15 @@ export const promotionsContract = (c: ContractInstance) =>
   c.router(
     {
       create: {
-        body: createPromotionBodySchema,
+        body: c.type<CreatePromotionBodySchema>(),
+        contentType: "multipart/form-data",
         method: "POST",
         path: "/create",
         responses: {
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: createPromotionResponseSchema,
@@ -49,7 +51,7 @@ export const promotionsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: deletePromotionResponseSchema,
@@ -63,7 +65,7 @@ export const promotionsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getPromotionsResponseSchema,
@@ -77,14 +79,15 @@ export const promotionsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: getByIdPromotionResponseSchema,
         },
       },
       update: {
-        body: updatePromotionBodySchema,
+        body: c.type<UpdatePromotionBodySchema>(),
+        contentType: "multipart/form-data",
         method: "PUT",
         path: "/update/:promotionId",
         pathParams: updatePromotionPathParamsSchema,
@@ -92,7 +95,7 @@ export const promotionsContract = (c: ContractInstance) =>
           [STATUS_CODES.BAD_REQUEST]: BadRequestError.zodSchema
             .or(ResponseValidationError.zodSchema)
             .or(RequestValidationError.zodSchema),
-          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema,
+          [STATUS_CODES.FORBIDDEN]: ForbiddenError.zodSchema.or(JWTError.zodSchema),
           [STATUS_CODES.NOT_FOUND]: NotFoundError.zodSchema,
           [STATUS_CODES.SERVER_ERROR]: ServerError.zodSchema,
           [STATUS_CODES.SUCCESS]: updatePromotionResponseSchema,

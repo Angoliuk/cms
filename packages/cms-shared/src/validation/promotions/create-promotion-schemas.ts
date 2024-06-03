@@ -3,48 +3,68 @@ import { PROMOTION_LOCATION, PROMOTION_LOCATION_LIST_TYPE } from "@prisma/client
 import { z } from "zod";
 export type BaseCreatePromotionSchema = z.infer<typeof baseCreatePromotionSchema>;
 export const baseCreatePromotionSchema = z.object({
-  isDraft: z.boolean(),
+  isDraft: z
+    .string()
+    .toLowerCase()
+    .transform(value => value === "true")
+    .pipe(z.boolean())
+    .or(z.boolean()),
   locations: uniqueEnumArray(PROMOTION_LOCATION),
 });
 
 export type BaseCreateSearchPromotionSchema = z.infer<typeof baseCreateSearchPromotionSchema>;
-export const baseCreateSearchPromotionSchema = z.object({ search: z.string().optional() });
-const createSearchPromotionWithoutContentSchema = baseCreateSearchPromotionSchema.and(baseCreatePromotionSchema);
+export const baseCreateSearchPromotionSchema = z.object({ search: z.string().min(1) });
+const createSearchPromotionWithoutContentSchema =
+  baseCreateSearchPromotionSchema.and(baseCreatePromotionSchema);
 
 export type BaseCreateListPromotionSchema = z.infer<typeof baseCreateListPromotionSchema>;
 export const baseCreateListPromotionSchema = z.object({
-  listType: z.nativeEnum(PROMOTION_LOCATION_LIST_TYPE).optional(),
-  priority: z.coerce.number().min(0).max(100).optional(),
+  listType: z.nativeEnum(PROMOTION_LOCATION_LIST_TYPE),
+  priority: z.coerce.number().min(0).max(100),
 });
-const createListPromotionWithoutContentSchema = baseCreateListPromotionSchema.and(baseCreatePromotionSchema);
+const createListPromotionWithoutContentSchema =
+  baseCreateListPromotionSchema.and(baseCreatePromotionSchema);
 
-export type CreatePromotionWithImageContentSchema = z.infer<typeof createPromotionWithImageContentSchema>;
+export type CreatePromotionWithImageContentSchema = z.infer<
+  typeof createPromotionWithImageContentSchema
+>;
 export const createPromotionWithImageContentSchema = z.object({
+  image: z.instanceof(File),
   link: z.string().optional(),
-  url: z.string().min(1),
 });
 
-export type CreatePromotionWithTextContentSchema = z.infer<typeof createPromotionWithTextContentSchema>;
+export type CreatePromotionWithTextContentSchema = z.infer<
+  typeof createPromotionWithTextContentSchema
+>;
 export const createPromotionWithTextContentSchema = z.object({
   link: z.string().min(1),
   text: z.string().min(1),
 });
-export type CreatePromotionWithNewsContentSchema = z.infer<typeof createPromotionWithNewsContentSchema>;
+
+export type CreatePromotionWithNewsContentSchema = z.infer<
+  typeof createPromotionWithNewsContentSchema
+>;
 export const createPromotionWithNewsContentSchema = z.object({
   newsId: z.string().min(1),
 });
 
-export type CreateSearchPromotionWithImageSchema = z.infer<typeof createSearchPromotionWithImageSchema>;
+export type CreateSearchPromotionWithImageSchema = z.infer<
+  typeof createSearchPromotionWithImageSchema
+>;
 export const createSearchPromotionWithImageSchema = createSearchPromotionWithoutContentSchema.and(
   createPromotionWithImageContentSchema,
 );
 
-export type CreateSearchPromotionWithTextSchema = z.infer<typeof createSearchPromotionWithTextSchema>;
+export type CreateSearchPromotionWithTextSchema = z.infer<
+  typeof createSearchPromotionWithTextSchema
+>;
 export const createSearchPromotionWithTextSchema = createSearchPromotionWithoutContentSchema.and(
   createPromotionWithTextContentSchema,
 );
 
-export type CreateSearchPromotionWithNewsSchema = z.infer<typeof createSearchPromotionWithNewsSchema>;
+export type CreateSearchPromotionWithNewsSchema = z.infer<
+  typeof createSearchPromotionWithNewsSchema
+>;
 export const createSearchPromotionWithNewsSchema = createSearchPromotionWithoutContentSchema.and(
   createPromotionWithNewsContentSchema,
 );

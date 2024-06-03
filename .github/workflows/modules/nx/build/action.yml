@@ -15,7 +15,7 @@ runs:
 
     - name: Prisma Generation
       shell: bash
-      run: pnpm nx generate-types db
+      run: pnpm nx generate db
 
     - name: Build
       shell: bash

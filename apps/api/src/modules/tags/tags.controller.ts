@@ -1,8 +1,10 @@
-import { contract } from "@/shared/api";
+import { cmsContract } from "@/cms-shared/api";
 import { NotFoundError, formatResponse, getPaginatedResponse } from "@/shared/utils";
-import { Controller } from "@nestjs/common";
+import { Controller, UseGuards } from "@nestjs/common";
 import { TsRest, TsRestHandler, tsRestHandler } from "@ts-rest/nest";
 
+import { AccessTokenGuard } from "../../guards";
+import { getPaginationSelectFromQuery } from "../../utils";
 import { TagsService } from "./tags.service";
 
 @Controller()
@@ -10,31 +12,39 @@ import { TagsService } from "./tags.service";
 export class TagsController {
   constructor(private tagsService: TagsService) {}
 
-  @TsRestHandler(contract.tags.create)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.tags.create)
   async create() {
-    return tsRestHandler(contract.tags.create, async ({ body }) => {
+    return tsRestHandler(cmsContract.tags.create, async ({ body }) => {
       const tag = await this.tagsService.create({ data: body });
 
       return formatResponse(tag);
     });
   }
 
-  @TsRestHandler(contract.tags.delete)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.tags.delete)
   async delete() {
-    return tsRestHandler(contract.tags.delete, async ({ params }) => {
+    return tsRestHandler(cmsContract.tags.delete, async ({ params }) => {
       const tag = await this.tagsService.delete({ where: { id: params.tagId } });
 
       return formatResponse(tag);
     });
   }
 
-  @TsRestHandler(contract.tags.get)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.tags.get)
   async get() {
-    return tsRestHandler(contract.tags.get, async ({ query }) => {
+    return tsRestHandler(cmsContract.tags.get, async ({ query }) => {
       const { limit, orderBy, page } = query;
-      const tags = await this.tagsService.get({ orderBy, skip: page, take: limit });
+      const tags = await this.tagsService.get({
+        orderBy,
+        ...getPaginationSelectFromQuery(page, limit),
+      });
+      const count = await this.tagsService.count({});
 
       const response = getPaginatedResponse(tags, {
+        count,
         limit,
         page,
       });
@@ -42,9 +52,10 @@ export class TagsController {
     });
   }
 
-  @TsRestHandler(contract.tags.getById)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.tags.getById)
   async getById() {
-    return tsRestHandler(contract.tags.getById, async ({ params }) => {
+    return tsRestHandler(cmsContract.tags.getById, async ({ params }) => {
       const tag = await this.tagsService.getOne({ where: { id: params.tagId } });
 
       if (!tag) return formatResponse(new NotFoundError("Tag not found"));
@@ -53,9 +64,10 @@ export class TagsController {
     });
   }
 
-  @TsRestHandler(contract.tags.update)
+  @UseGuards(AccessTokenGuard)
+  @TsRestHandler(cmsContract.tags.update)
   async update() {
-    return tsRestHandler(contract.tags.update, async ({ body, params }) => {
+    return tsRestHandler(cmsContract.tags.update, async ({ body, params }) => {
       const tag = await this.tagsService.update({ data: body, where: { id: params.tagId } });
 
       return formatResponse(tag);

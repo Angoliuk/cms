@@ -35,7 +35,6 @@ export const updateUserPathParamsSchema = z.object({ userId: userIdSchema });
 export type UpdateUserBodySchema = z.infer<typeof updateUserBodySchema>;
 export const updateUserBodySchema = z.object({
   email: z.string().email(),
-  password: userPasswordSchema,
 });
 
 export type UpdateUserResponseSchema = z.infer<typeof updateUserResponseSchema>;

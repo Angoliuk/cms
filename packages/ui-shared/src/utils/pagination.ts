@@ -9,7 +9,8 @@ export const getPaginationItems = ({
   totalPages: number;
 }) => {
   const totalPages = params.totalPages;
-  const page = params.page > params.totalPages ? params.totalPages : params.page < 1 ? 1 : params.page;
+  const page =
+    params.page > params.totalPages ? params.totalPages : params.page < 1 ? 1 : params.page;
 
   if (totalPages <= itemsCount) {
     return Array.from({ length: totalPages }).map((_, i) => {

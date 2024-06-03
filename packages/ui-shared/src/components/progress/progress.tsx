@@ -7,7 +7,10 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 export const Progress = forwardRef<ElementRef<typeof Root>, ComponentPropsWithoutRef<typeof Root>>(
   ({ className, value, ...props }, ref) => (
     <Root
-      className={tw("relative h-2 w-full overflow-hidden rounded-full bg-stone-900/20 dark:bg-stone-50/20", className)}
+      className={tw(
+        "relative h-2 w-full overflow-hidden rounded-full bg-stone-900/20 dark:bg-stone-50/20",
+        className,
+      )}
       ref={ref}
       {...props}
     >
