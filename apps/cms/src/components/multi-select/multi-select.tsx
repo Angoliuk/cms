@@ -49,7 +49,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="flex gap-2 font-bold" variant="outline">
-          <span>{triggerText}</span>
+          <span className="text-white-1000">{triggerText}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" onCloseAutoFocus={e => e.preventDefault()}>
