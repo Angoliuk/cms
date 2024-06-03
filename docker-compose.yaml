@@ -34,20 +34,20 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
-  # cms:
-  #   build:
-  #     context: ./
-  #     dockerfile: ./Dockerfile.cms
-  #   ports:
-  #     - "4200:4200"
-  #   restart: unless-stopped
-  # web:
-  #   build:
-  #     context: ./
-  #     dockerfile: ./Dockerfile.web
-  #   ports:
-  #     - "4201:4201"
-  #   restart: unless-stopped
+  cms:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.cms
+    ports:
+      - "4200:4200"
+    restart: unless-stopped
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.web
+    ports:
+      - "4201:4201"
+    restart: unless-stopped
   postgres:
     image: postgres
     ports:
